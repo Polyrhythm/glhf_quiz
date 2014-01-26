@@ -1,0 +1,72 @@
+<template>
+<div></div>
+<table>
+<tr>
+<th>X</th>
+<th>Y</th>
+<th>Z</th>
+</tr>
+
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+</template>
+
+<script>
+var currentScript = document.currentScript || document._currentScript;
+var localDocument = currentScript.ownerDocument;
+var Box = Object.create(HTMLElement.prototype);
+
+var template = localDocument.querySelector('template');
+
+Box._setStatus = function(status){
+  this.querySelector('div').textContent = status;
+};
+/*
+Box._handleOrientationChange = function(e) {
+  this._setStatus('orientation changed');
+
+  var tds = this.querySelectorAll('td');
+
+  tds[0].textContent = event.alpha;
+  tds[1].textContent = event.beta;
+  tds[2].textContent = event.gamma;
+};*/
+
+Box.attachedCallback = function() {
+  var content = document.importNode(template.content, true);
+  this.appendChild(content);
+
+  this._setStatus('checking device orientation');
+
+  if('DeviceOrientationEvent' in window) {
+    this._setStatus('device orientation enabled');
+
+    //window.addEventListener('deviceorientation', this._handleOrientationChange)
+  } else {
+    this._setStatus('device orientation disabled');
+  }
+  //this.attached();
+  //this.ready();
+};
+
+var box = document.registerElement('vs-box', { prototype: Box });
+console.log('registered');
+
+function export1(project){
+  return {
+    ready: function(){
+    },
+
+    attached: function(){
+      debugger
+    },
+
+    configSet: function(){
+    }
+  }
+};
+</script>
