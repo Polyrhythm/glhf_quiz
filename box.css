@@ -3,46 +3,73 @@ vs-box {
   min-height: 320px;
   padding: 52px 0;
   overflow: none;
+
   -webkit-perspective: 800;
 }
 
 .card {
   z-index: 5;
-
-  display: block;
   margin: auto;
 
-  width: 80%;
-  height: 70%;
-  max-width: 350px;
-  max-height: 500px;
+  width: 200px;
+  height: 300px;
 
-/*  -webkit-transform-origin: 50% 50%;*/
+  box-sizing: border-box;
+
   -webkit-transform-style: preserve-3d;
   -webkit-transition: 0.5s;
 }
 
-.card figure {
+.card > div {
   width: 100%;
   height: 100%;
-
-  margin: 0;
-  position: absolute;
-  top: 0;
-  display: table;
-  border-radius: 1em;
-  text-align: center;
-  padding: 2em;
-  box-sizing: border-box;
-  overflow: hidden;
+  border-radius: 15px;
+  position: relative;
 
   -webkit-backface-visibility: hidden ;
 }
 
-.card figure img {
+.rank {
   width: 100%;
-  vertical-align: middle;
-  display: inline-block;
+  text-align: center;
+  position: absolute;
+
+  top: 50%;
+  margin-top: -10px;
+
+  font-size: 37px;
+  font-family: sans-serif;
+}
+
+.rank:before, .rank:after {
+  position: absolute;
+  font-size: 25px;
+  top: -120px; left: 15px;
+}
+
+.rank:after{
+  top: 120px; left: 165px;
+}
+
+.spade, .club {
+  color: black;
+}
+
+.heart, .diamond {
+  color: red;
+}
+
+.spade:before, .spade:after {
+  content: "\2660";
+}
+.club:before, .club:after {
+  content: "\2667";
+}
+.heart:before, .heart:after {
+  content: "\2665";
+}
+.diamond:before, .diamond:after {
+  content: "\2666";
 }
 
 .front {
@@ -57,29 +84,6 @@ vs-box {
   box-shadow: 0 0 3px 0 rgba(108,106,95,0.3);
   font-weight: bold;
 }
-
-.card figure figcaption {
-  text-align:center;
-  vertical-align: middle;
-  display: table-row;
-  width: 100%;
-  padding: 2em 1em;
-
-  font-size: 2em;
-  color: #454442;
-  line-height: 1.5em;
-}
-
-.card figure div {
-  display: table-row;
-}
-
-.card button {
-  width: 100%;
-  display: block;
-}
-
-.card { rotateY: (0deg); }
 
 .card.flipped {
   -webkit-transform: rotateY(-180deg);

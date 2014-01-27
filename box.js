@@ -23,64 +23,56 @@ Box.createdCallback = function(){
 Box.attachedCallback = function() {
   this.appendChild(document.importNode(this._template, true));
 
-  console.info('scene');
+  console.info('ready');
 
   this.card = this.querySelector('.card');
-  this.orient();
+  this._startOrienting();
 };
 
-Box._handleOrientationChange = function(e) {
-  var angles = this._normalizeAngles(e);
-  var attack = angles[1];
-  var incline = Math.floor(angles[2] / (1 + attack / 10));
-  console.info(incline);
-
-  this._flipIf(incline);
-};
-
-Box._flipIf = function(incline){
-  var sign = incline < 0 ? -1 : 1;
-  var angle = Math.abs(incline);
-
-  if(angle > FLIP_INCLINE) {
-    this._flip(sign);
-  }
-
-  if(angle <= FLIP_INCLINE ) {
-    this._flipped = false;
-  }
-}
-
-Box._flip = function(sign) {
-  if(this._flipped) { return; }
-
-  this.card.classList.toggle('flipped');
-
-  this._flipped = true;
-  console.info('flipped');
-};
-
-Box._normalizeAngles = function(e) {
-  return _.chain([e.alpha, e.beta, e.gamma])
-    .map(function(angle){
-      var sign = (angle >= 0) ? 1 : -1;
-      return (Math.abs(angle) > THRESHOLD) ? angle - sign * THRESHOLD : 0; })
-    .map(function(angle){
-      return Math.floor(angle);
-    })
-    .value();
-};
-
-Box.orient = function() {
+Box._startOrienting = function() {
   if('DeviceOrientationEvent' in window) {
     var that = this;
     that._angles = [0,0,0];
 
     var handler = _.throttle(this._handleOrientationChange, 50).bind(this);
     window.addEventListener('deviceorientation', handler, true);
-
   } else {
     this._setStatus('no device orientation');
   }
 };
+
+Box._handleOrientationChange = function(e) {
+  var angles = this._normalizeAngles(e);
+  //var vector = toVector(angles);
+};
+
+Box._normalizeAngles = function(e) {
+  return _.chain([e.alpha, e.beta, e.gamma])
+    .map(function(angle){
+      return toRadians(angle);
+    })
+    .value();
+};
+
 //module.exports = Box;
+// Non-relevant stuff
+
+function toRadians(degrees) {
+  return degrees * (Math.PI / 180);
+}
+
+function toDegrees(radians) {
+  return radians * (180 / Math.PI);
+}
+
+function toVector(angles) {
+  var a = angles[0];
+  var b = angles[1];
+  var g = angles[2];
+
+  var x = - Math.cos(a) * Math.sin(g) - Math.sin(a) * Math.sin(b) * Math.cos(g);
+  var y = - Math.sin(a) * Math.sin(g) + Math.cos(a) * Math.sin(b) * Math.cos(g);
+  var z = - Math.cos(b) * Math.cos(g);
+
+  return _.map([x, y, z], function(n) { return +n.toFixed(2); });
+}

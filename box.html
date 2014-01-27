@@ -7,23 +7,22 @@
 <body>
   <template>
     <div class="card">
-      <figure class="front">
-        <figcaption>лев</figcaption>
-        <div>
-        <button>fox</button>
-        <button>squirrel</button>
-        <button>lion</button>
-        <button>zebra</button>
-        </div>
-      </figure>
 
-      <figure class="back">
-        <img src="assets/wild-lions.jpg" />
-      </figure>
+      <div class="front">
+        <div class="rank spade">A</div>
+      </div>
+
+      <div class="back"></div>
     </div>
   </template>
 </body>
 
 <script>
-  document.registerElement('vs-box', { prototype: Box })
+  document.registerElement('vs-box', { prototype: Box });
+
+  function registrationEvent(){
+    return new CustomEvent('gadgetRegistered', { detail: { tag: 'vs-box'}});
+  };
+
+  window.dispatchEvent(registrationEvent());
 </script>
