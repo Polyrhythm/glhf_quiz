@@ -1,6 +1,8 @@
 var doc = document.querySelector('link[rel="import"]').import;
 var Box = Object.create(HTMLElement.prototype);
 
+var FLIP_INCLINE = 37;
+
 Box.createdCallback = function(){
   this._template = doc.querySelector('template').content;
 
@@ -18,47 +20,76 @@ Box.createdCallback = function(){
 }
 
 Box.attachedCallback = function() {
-  this.textContent = 'ready';
   this.appendChild(document.importNode(this._template, true));
   this.classList.add('scene');
+
+  console.info('scene');
+
+  this.card = this.querySelector('.card');
+  this.orient();
 };
 
-Box.handleOrientationChange = function(e) {
-  this._setStatus('orientation changed');
+Box._handleOrientationChange = function(e) {
   var angles = this._normalizeAngles(e);
+  var incline = Math.abs(angles[2]);
+  console.info(incline);
 
-  var dark = (angles.gamma < -120);
-  this._setSide(dark);
-
-  var tds = this.querySelectorAll('td');
-
-  tds[0].textContent = angles.alpha;
-  tds[1].textContent = angles.beta;
-  tds[2].textContent = angles.gamma;
-
-  this._setTransform(e);
+  this._flipIf(incline);
 };
 
-Box.normalizeAngles = function(e) {
-  return {
-    alpha: Math.floor(e.alpha),
-    beta: Math.floor(e.beta),
-    gamma: Math.floor(e.gamma)
+Box._flipIf = function(incline){
+  if(incline > FLIP_INCLINE) {
+    this._flip();
+  }
+
+  if(incline < FLIP_INCLINE ) {
+    this._flipped = false;
+  }
+}
+Box._flip = function() {
+  if(this._flipped) { return; }
+
+  this.card.classList.toggle('flipped');
+  this._flipped = true;
+};
+
+Box._normalizeAngles = function(e) {
+  return _.chain([e.alpha, e.beta, e.gamma])
+    .map(function(angle){ return Math.floor(angle); })
+    .value();
+};
+
+Box._checkFlip = function(angles) {
+  console.log('checking flip', angles);
+}
+
+Box._position = function(angles) {
+  var rotate = {
+    rotateX: angles[1],
+    rotateZ: -angles[2],
+    rotateZ: angles[2]
   };
+
+  var css = _.chain(rotate)
+    .pairs()
+    .map(function(pair){ return pair[0] + '(' + pair[1] + 'deg)'; })
+    .value()
+    .join(' ');
+
+  console.log(css);
+  //this.card.style['-webkit-transform'] = css;
 };
 
-Box._setTransform = function(angles) {
-  var str = 'rotate(' + Math.floor(angles.alpha) + 'deg)';
-  str += ' skew(' + Math.floor(angles.gamma) + 'deg)';
-  //this._status.textContent = str;
-  this._status.style['-webkit-transform'] = str;
-};
-
-Box._enableOrientation = function() {
+Box.orient = function() {
   if('DeviceOrientationEvent' in window) {
     var that = this;
+    that._angles = [0,0,0];
 
-    window.addEventListener('deviceorientation', function(e) { that._handleOrientationChange(e); }, true);
+    console.info('tracking orientation');
+
+    var handler = _.throttle(this._handleOrientationChange, 50).bind(this);
+    window.addEventListener('deviceorientation', handler, true);
+
   } else {
     this._setStatus('no device orientation');
   }

@@ -1,12 +1,10 @@
 vs-box {
   display: block;
-  height: 100%;
+  min-height: 320px;
 }
 
-vs-box.scene {
-}
-
-vs-box .box {
+vs-box .card {
+  -webkit-transform-origin: 50% 50%;
   z-index: 5;
 
   display: block;
@@ -18,6 +16,30 @@ vs-box .box {
   top: 50%;
   left: 50%;
 
-  border: 3px solid red;
+  border: 3px solid #c3c7ca;
+  border-radius: 15px;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 3em;
+  color: #c3c7ca;
 
+  box-shadow: 0 0 10px rgba(0,0,0,0.25);
+}
+
+.card div { display: block; height: 100%; }
+.card .front {
+  color: green;
+  display: block;
+}
+
+.card .back {
+  color: red;
+  display: none;
+}
+
+.flipped .front {
+  display: none;
+}
+.flipped .back {
+  display: block;
 }
