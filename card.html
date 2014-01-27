@@ -1,28 +1,27 @@
 <head>
-  <link rel="stylesheet" href="box.css" />
+  <link rel="stylesheet" href="card.css" />
   <script src="./underscore.js"></script>
-  <script src="/box.js"></script>
+  <script src="/card.js"></script>
 </head>
 
 <body>
   <template>
-    <div class="card">
-
+    <div class="card open">
       <div class="front">
         <div class="rank spade">A</div>
       </div>
-
       <div class="back"></div>
     </div>
   </template>
 </body>
 
 <script>
-  document.registerElement('vs-box', { prototype: Box });
+  // Leaking globals for now, like Card
+  document.registerElement('vs-box', { prototype: Card });
 
+  // Hacky way to communicate readyness
   function registrationEvent(){
     return new CustomEvent('gadgetRegistered', { detail: { tag: 'vs-box'}});
   };
-
   window.dispatchEvent(registrationEvent());
 </script>
