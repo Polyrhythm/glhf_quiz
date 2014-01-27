@@ -1,45 +1,94 @@
 vs-box {
   display: block;
   min-height: 320px;
+  padding: 52px 0;
+  overflow: none;
+  -webkit-perspective: 800;
 }
 
-vs-box .card {
-  -webkit-transform-origin: 50% 50%;
+.card {
   z-index: 5;
 
   display: block;
-  width: 150px;
-  height: 150px;
-  margin: -75px 0 0 -75px;
+  margin: auto;
 
+  width: 80%;
+  height: 70%;
+  max-width: 350px;
+  max-height: 500px;
+
+/*  -webkit-transform-origin: 50% 50%;*/
+  -webkit-transform-style: preserve-3d;
+  -webkit-transition: 0.5s;
+}
+
+.card figure {
+  width: 100%;
+  height: 100%;
+
+  margin: 0;
   position: absolute;
-  top: 50%;
-  left: 50%;
-
-  border: 3px solid #c3c7ca;
-  border-radius: 15px;
+  top: 0;
+  display: table;
+  border-radius: 1em;
   text-align: center;
+  padding: 2em;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  -webkit-backface-visibility: hidden ;
+}
+
+.card figure img {
+  width: 100%;
   vertical-align: middle;
-  font-size: 3em;
-  color: #c3c7ca;
-
-  box-shadow: 0 0 10px rgba(0,0,0,0.25);
+  display: inline-block;
 }
 
-.card div { display: block; height: 100%; }
-.card .front {
-  color: green;
+.front {
+  background: #fff;
+  color: #7c7975;
+  box-shadow: 0 0 3px 0 rgba(108,106,95,0.6);
+}
+
+.back {
+  background: #edd172;
+  color: #454442;
+  box-shadow: 0 0 3px 0 rgba(108,106,95,0.3);
+  font-weight: bold;
+}
+
+.card figure figcaption {
+  text-align:center;
+  vertical-align: middle;
+  display: table-row;
+  width: 100%;
+  padding: 2em 1em;
+
+  font-size: 2em;
+  color: #454442;
+  line-height: 1.5em;
+}
+
+.card figure div {
+  display: table-row;
+}
+
+.card button {
+  width: 100%;
   display: block;
 }
 
-.card .back {
-  color: red;
-  display: none;
+.card { rotateY: (0deg); }
+
+.card.flipped {
+  -webkit-transform: rotateY(-180deg);
 }
 
-.flipped .front {
-  display: none;
+.back {
+  -webkit-transform: rotateY(-180deg);
 }
-.flipped .back {
-  display: block;
+
+.card.flipped .back {
+  -webkit-transform: rotateY(-180deg);
 }
