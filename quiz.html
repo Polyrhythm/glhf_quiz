@@ -1,0 +1,38 @@
+<head>
+  <link rel="stylesheet" href="quiz.css" />
+  <script src="./underscore.js"></script>
+  <script src="/quiz.js"></script>
+</head>
+
+<body>
+  <template>
+    <div class="quiz-container">
+
+      <div class="question">
+      </div>
+
+      <div class="answers">
+        <button data-value="true">True</button>
+        <button data-value="false">False</button>
+      </div>
+
+      <div class="stats">
+        <p class="score">
+          0<var>/</var>0
+        </p>
+      </div>
+
+    </div>
+  </template>
+</body>
+
+<script>
+  // Leaking globals for now, like Quiz 
+  document.registerElement('vs-box', { prototype: Quiz });
+
+  // Hacky way to communicate readyness
+  function registrationEvent(){
+    return new CustomEvent('gadgetRegistered', { detail: { tag: 'vs-box'}});
+  };
+  window.dispatchEvent(registrationEvent());
+</script>
