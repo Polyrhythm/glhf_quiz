@@ -18,8 +18,8 @@ QuizPrototype.createdCallback = function(){
   var script = this.querySelector('script[type="props/json"]');
   if(script) {
     this._defaultConfig = JSON.parse(script.textContent);
+    this.removeChild(script);
   }
-  this.removeChild(script);
 };
 
 QuizPrototype.attachedCallback = function() {
