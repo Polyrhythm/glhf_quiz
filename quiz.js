@@ -1,5 +1,6 @@
 // get "current document" (with template) via the parent
-var _doc = (document.currentScript || document._currentScript).ownerDocument;
+var _link = document.querySelector('link[href="quiz.html"]');
+var _doc = _link.import;
 
 // setup templating
 // TODO: maybe extract to gbox?
@@ -14,7 +15,7 @@ QuizPrototype.createdCallback = function(){
   //
   // Read default config from HTML upon instantiation
   //
-  var script = document.querySelector('script');
+  var script = this.querySelector('script[type="props/json"]');
   if(script) {
     this._defaultConfig = JSON.parse(script.textContent);
   }
