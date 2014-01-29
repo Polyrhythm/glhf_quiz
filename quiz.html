@@ -1,10 +1,10 @@
 <link rel="stylesheet" href="quiz.css" />
 
 <template>
-  <header>
+  <header class="quiz-header">
     <label></label>
-    <output ref="total"></output>
-    <output ref="answered"></output>
+    <output ref="total">0</output>
+    <output ref="answered">0</output>
     <a class="reset" ref="reset" href="#reset"></a>
   </header>
 
@@ -21,8 +21,8 @@
 <template ref="question">
   <section class="question">
     <p></p>
-    <input type="button" class="answer" value="True!"/>
-    <input type="button" class="answer" value="False!"/>
+    <button class="answer" data-answer="true">Yep!</button>
+    <button class="answer" data-asnwer="false">Nope!</button>
   </section>
 </template>
 

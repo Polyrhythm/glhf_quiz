@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>Responsive and reactive quiz gadget</title>
+<meta
+  name="viewport"
+  content="width=device-width, height=device-height, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+
+<script src="platform.js"></script>
+
+<link rel="import" href="glhf.html" />
+<link rel="import" href="quiz.html" />
+
+<script type="text/javascript">
+window.addEventListener('HTMLImportsLoaded', function(){
+  test_suite_1();
+})
+
+function test_suite_1(){
+  var quiz = new VsQuiz();
+  document.body.appendChild(quiz);
+
+  window.requestAnimationFrame(function(){
+    quiz.addQuestion({ title: 'question 1', correctAnswer: true });
+    quiz.addQuestion({ title: 'question 2', correctAnswer: false });
+
+    function assert(){
+      if(quiz.correctAnswerCount() == 2) {
+        console.info('TEST PASSED');
+      } else {
+        console.info('TEST FAILED');
+      }
+    }
+
+    setTimeout(function(){ quiz.start(); }, 300);
+    setTimeout(function(){ quiz.answer(true); }, 600);
+    setTimeout(function(){ quiz.answer(false); }, 900);
+    setTimeout(assert, 1200);
+  });
+}
+</script>
+</head>
+
+<body>
+</body>
+
+</html>
