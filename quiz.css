@@ -1,63 +1,103 @@
-.quiz-container {
-  margin-top: 3em;
+vs-quiz {
+  font-size: 20px;
+
+  /* hint: set min-height to 100% for fullscreen experience */
+  min-height: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 2em 0;
 }
 
-.stats {
+header {
+  display: block;
+  vertical-align: middle;
+  font-size: 2em;
+  line-height: 2em;
+  background: #fff;
+}
+
+.start {
+  display: block;
+  margin: 3em auto;
+  line-height: 2em;
+  padding: 0 2em;
+}
+
+.started .start {
+  display: none;
+}
+
+.result {
+  display: none;
+}
+
+.completed .result {
+  display: block;
+  width: 100%;
   text-align: center;
-  font-size: 4em;
+  font-size: 1.5em;
+  line-height: 1.3em;
+  margin-top: 2em;
 }
 
-.answers {
-  text-align: center;
-  margin-top: 2em
+.reset {
+  float: right;
+}
+.reset:after {
+  content: "re-take";
+  font-size: 20px;
+  margin-right: 2em;
+}
+.started .reset {
+  visibility: visible;
 }
 
-.answers button {
-  outline: none;
-  font-size: 3em;
-  font-family: sans-serif;
-  background: #555;
-  color: white;
-  width: 30%;
+header > output {
+  float: right;
 }
 
-@media screen and (max-width: 700px) {
-  .answers button {
-    width: 90%;
-    margin: 1em 0 0 0;
-  }
-}
+output:empty { content: "0"; }
+output[ref="correct"] { color: green; }
+output[ref="correct"]:before { content: "Correct answers:" ;}
+output[ref="total"]:before { content: "/"; }
 
-.answers button:hover, .answers button:active {
-  background: #000;
-}
-
-.question, .result-container {
-  font-size: 2.5em;
-  font-family: sans-serif;
-  color: #808080;
-  line-height: 1.2em;
-  text-align: center;
-  width: 90%;
-  margin: 0 auto 1em auto;
+.questions:empty :after{
+  content: "No questions to you, bro";
 }
 
 .question {
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 1em;
+  position: absolute;
+  left: -100%;
+  top: 0;
+
+  width: 100%;
+  max-width: 450px;
+  margin: 2em auto;
+
+  z-index: 1;
+  border-radius: 15px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+
+  text-align: center;
+  line-height: 2em;
+
+  padding: 1.5em;
 }
 
-@media screen and (max-width: 700px) {
-  .question {
-    border: none;
-    padding-bottom: 0;
-  }
+.question p {
+  min-height: 8em;
 }
 
-.result-container {
-  font-size: 4em;
-  margin-top: 3em;
-  color: #ccc;
-  font-weight: bold;
-  width: 95%;
+.question p:empty:after{
+  content: 'Untitled question';
+}
+
+.current {
+  position: relative;
+  display: block;
+
+  left: 0;
+  top: 0;
+  background: white;
+  z-index: 2;
 }

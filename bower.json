@@ -1,0 +1,22 @@
+{
+  "name": "glhf_quiz",
+  "version": "0.2.0",
+  "homepage": "https://github.com/mereskin/glhf_quiz",
+  "authors": [
+    "Ryan Jones"
+  ],
+  "description": "Quiz gadget based on web components",
+  "main": "quiz.html",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "underscore": "~1.5.2"
+  }
+}

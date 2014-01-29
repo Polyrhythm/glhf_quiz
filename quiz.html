@@ -1,38 +1,30 @@
-<head>
-  <link rel="stylesheet" href="quiz.css" />
-  <script src="./underscore.js"></script>
-  <script src="/quiz.js"></script>
-</head>
+<link rel="stylesheet" href="quiz.css" />
 
-<body>
-  <template>
-    <div class="quiz-container">
+<template>
+  <header>
+    <label></label>
+    <output ref="total"></output>
+    <output ref="answered"></output>
+    <a class="reset" ref="reset" href="#reset"></a>
+  </header>
 
-      <div class="question">
-      </div>
+  <button class="start" ref="start">Start quiz!</button>
 
-      <div class="answers">
-        <button data-value="true">True</button>
-        <button data-value="false">False</button>
-      </div>
+  <section class="questions"></section>
 
-      <div class="stats">
-        <p class="score">
-          0<var>/</var>0
-        </p>
-      </div>
+  <section class="result">
+    <p>Thank you for completing the quiz!</p>
+    <output ref="correct"></output>
+  </section>
+</template>
 
-    </div>
-  </template>
-</body>
+<template ref="question">
+  <section class="question">
+    <p></p>
+    <input type="button" class="answer" value="True!"/>
+    <input type="button" class="answer" value="False!"/>
+  </section>
+</template>
 
-<script>
-  // Leaking globals for now, like Quiz 
-  document.registerElement('vs-box', { prototype: Quiz });
-
-  // Hacky way to communicate readyness
-  function registrationEvent(){
-    return new CustomEvent('gadgetRegistered', { detail: { tag: 'vs-box'}});
-  };
-  window.dispatchEvent(registrationEvent());
-</script>
+<script src="bower_components/underscore/underscore.js"></script>
+<script src="quiz.js"></script>

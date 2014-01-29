@@ -1,0 +1,59 @@
+<html>
+<head>
+<title>Responsive and reactive quiz gadget</title>
+<meta
+  name="viewport"
+  content="width=device-width, height=device-height, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+
+<script src="platform.js"></script>
+
+<link rel="import" href="glhf.html" />
+<link rel="import" href="quiz.html" />
+</head>
+
+<body>
+  <vs-quiz>
+  <script type="props/json">{
+    "title": "Super-quiz",
+    "questions":
+    [
+      {
+        "title": "The more mass Earth gains, the higher you can jump off the ground.",
+        "correctAnswer": true
+      },
+      {
+        "title": "Internet Explorer is known for having the most progressive web standards.",
+        "correctAnswer": false
+      },
+      {
+        "title": "Cats drink milk by creating an upward-rising liquid column by use of their tongues.",
+        "correctAnswer": true
+      }
+    ]
+  }</script>
+  </vs-quiz>
+
+  <vs-quiz>
+  <script type="props/json">{
+    "title": "Yet another quiz",
+    "questions":
+    [
+      {
+        "title": "Who are we?",
+        "correctAnswer": true
+      },
+      {
+        "title": "Where did we come from?",
+        "correctAnswer": false
+      },
+      {
+        "title": "Where do we go?",
+        "correctAnswer": true
+      }
+    ]
+  }</script>
+  </vs-quiz>
+
+</body>
+</html>

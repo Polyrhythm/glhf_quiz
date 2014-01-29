@@ -1,82 +1,155 @@
 // get "current document" (with template) via the parent
-var doc = document.querySelector('link[rel="import"]').import;
-var Quiz = Object.create(HTMLElement.prototype);
+var _link = document.querySelector('link[href="quiz.html"]');
+var _doc = _link.import;
 
-Quiz.currentQuestion = 0;
-Quiz.numCorrect = 0;
+// setup templating
+// TODO: maybe extract to gbox?
+var _template = function(){ return document.importNode(_doc.querySelector('template').content, true) };
+var _questionTemplate = function(){ return document.importNode(_doc.querySelector('[ref="question"]').content, true); }
 
-Quiz.nextQuestion = function() {
-  // still answers to display
-  if (this.currentQuestion + 1 < this.data.length) {
-    Quiz.currentQuestion += 1;
-    this.querySelector('.question').innerHTML = this.data[this.currentQuestion].question;
-    this.updateStats();
-  } else {
-    this.displayResults();
+var QuizPrototype = Object.create(HTMLElement.prototype);
+
+//TODO: Extract to GBox
+QuizPrototype.createdCallback = function(){
+  // Ooops...
+  //
+  // Read default config from HTML upon instantiation
+  //
+  var script = this.querySelector('script[type="props/json"]');
+  if(script) {
+    this._defaultConfig = JSON.parse(script.textContent);
   }
+  this.removeChild(script);
 };
 
-Quiz.displayResults = function() {
-  this.querySelector('.quiz-container').className = 'result-container';
-  this.querySelector('.result-container').innerHTML = 'YOU GOT ' +
-    this.numCorrect + ' OUT OF ' + (this.currentQuestion + 1) + '!';
-};
+QuizPrototype.attachedCallback = function() {
+  //Render layout
+  this.appendChild(_template());
 
-Quiz.updateStats = function() {
-  this.querySelector('.score').innerHTML = this.numCorrect + '/' + this.currentQuestion;
-};
+  // TODO:
+  //
+  // Extract to GBox
+  this.ui = {}
 
-// This callbacks should not be exposed to developer
-// and must stay in boilerplate layer
-Quiz.createdCallback = function() {
-  this._template = doc.querySelector('template').content;
-  window.quiz = this; // debug
-};
+  this.ui.questions = function(){ return this.querySelector('.questions'); }.bind(this);
+  this.ui.currentQuestion = function(){ return this.querySelector('section.current'); }.bind(this);
 
-Quiz.attachedCallback = function() {
-  this.appendChild(document.importNode(this._template, true));
-  this._init();
+  this.ui.total = function(text) { this.querySelector('[ref="total"]').textContent = text; }.bind(this);
+  this.ui.answered = function(text) { this.querySelector('[ref="answered"]').textContent = text; }.bind(this);
+  this.ui.correct = function(text) { this.querySelector('[ref="correct"]').textContent = text; }.bind(this);
+
   this._delegateEvents();
 
-  console.info('ready');
+  // Render first time, if we have default config
+  if (this._defaultConfig) {
+    this.onConfigSet(this._defaultConfig);
+  }
 };
 
-// display the initial question
-Quiz._init = function() {
-  this.querySelector('.question').innerHTML = this.data[this.currentQuestion].question;
-};
+QuizPrototype._delegateEvents = function(){
+  this.addEventListener('click', function(e){
+    if(e.target.className == 'answer') {
+      this.answer(e.target.value);
+    };
 
-// TODO: removedCallback and undelegate events are needed
-Quiz._delegateEvents = function() {
-  var buttons = this.querySelectorAll('button');
-  function answerEvent(e) {
-    e.preventDefault();
-    // correct
-    if (e.target.getAttribute('data-value') === this.data[this.currentQuestion].answer) {
-      this.numCorrect += 1;
-    } else {
-      // incorrect
+    if(e.target.hasAttribute('ref')) {
+      var ref = e.target.getAttribute('ref');
+
+      if(ref == 'reset') {
+        this.reset();
+      };
+
+      if(ref == 'start') {
+        this.start();
+      };
     }
-    return this.nextQuestion();
-  }
 
-  // have to manually attach listener to each button element
-  for (var i = 0; i < buttons.length; i++) {
-    buttons[i].addEventListener('click', answerEvent.bind(this));
+    e.stopPropagation();
+  });
+};
+
+QuizPrototype.onConfigSet = function(quiz){
+  this._correctAnswers = [];
+  this.setTitle(quiz.title);
+
+  this.clearQuestions();
+  quiz.questions.forEach(this.addQuestion.bind(this));
+
+  this.reset();
+};
+
+QuizPrototype.setTitle = function(title) {
+  this.querySelector('header > label').textContent = title;
+};
+
+QuizPrototype.clearQuestions = function(){
+  this.ui.questions().innerHTML = '';
+  this.ui.total(0);
+};
+
+QuizPrototype.addQuestion = function(question) {
+  var template = _questionTemplate();
+  template.querySelector('p').textContent = question.title;
+  this._correctAnswers.push(question.correctAnswer);
+
+  //question.querySelector('label').textContent = question.title;
+  this.ui.questions().appendChild(template);
+  this.ui.total(this.ui.questions().children.length);
+};
+
+QuizPrototype.start = function(){
+  this.reset();
+
+  this.classList.add('started');
+  this.querySelector('.questions section').classList.add('current');
+};
+
+QuizPrototype.reset = function(){
+  this._answers = [];
+  this._correct = 0;
+
+  this.ui.answered(0);
+  this.ui.correct(0);
+
+  this.classList.remove('started', 'completed');
+
+  var current = this.ui.currentQuestion();
+  if(current) {
+    current.classList.remove('current');
+  };
+};
+
+QuizPrototype.complete = function(){
+  this.classList.add('completed');
+};
+
+QuizPrototype.answer = function(value) {
+  var answer = (value == 'True!');
+
+  this._answers.push(answer);
+
+  if(this.lastAnswerIsCorrect()) {
+    this._correct++;
+    this.ui.correct(this._correct);
+  };
+
+  this.ui.answered(this._answers.length);
+
+  var current = this.ui.currentQuestion()
+  current.classList.add('answered');
+  current.classList.remove('current');
+
+  var next = current.nextElementSibling;
+  if(next) {
+    next.classList.add('current');
+  } else {
+    this.complete();
   }
 };
 
-Quiz.data = [
-  {
-    question: 'The more mass Earth gains, the higher you can jump off the ground.',
-    answer: 'false'
-  },
-  {
-    question: 'Internet Explorer is known for having the most progressive web standards.',
-    answer: 'false'
-  },
-  {
-    question: 'Cats drink milk by creating an upward-rising liquid column by use of their tongues.',
-    answer: 'true'
-  }
-];
+QuizPrototype.lastAnswerIsCorrect = function(){
+  var index = this._answers.length - 1;
+  return this._answers[index] == this._correctAnswers[index];
+};
+
+var VsQuiz = document.registerElement('vs-quiz', { prototype: QuizPrototype });
