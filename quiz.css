@@ -1,8 +1,11 @@
 vs-quiz {
-  max-width: 730px;
-  margin: auto;
-  display: block;
   font-size: 20px;
+
+  /* hint: set min-height to 100% for fullscreen experience */
+  min-height: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 2em 0;
 }
 
 header {
@@ -10,17 +13,17 @@ header {
   vertical-align: middle;
   font-size: 2em;
   line-height: 2em;
-  background: rgba(255, 255, 255, 0.3);
+  background: #fff;
 }
 
-button[ref="start"] {
+.start {
   display: block;
   margin: 3em auto;
   line-height: 2em;
   padding: 0 2em;
 }
 
-.started [ref="start"] {
+.started .start {
   display: none;
 }
 
@@ -37,18 +40,16 @@ button[ref="start"] {
   margin-top: 2em;
 }
 
-header a[ref="reset"] {
+.reset {
   float: right;
 }
-
-.started header a[ref="reset"] {
-  visibility: visible;
-}
-
-header a[ref="reset"]:after {
+.reset:after {
   content: "re-take";
   font-size: 20px;
   margin-right: 2em;
+}
+.started .reset {
+  visibility: visible;
 }
 
 header > output {
@@ -63,9 +64,6 @@ output[ref="total"]:before { content: "/"; }
 .questions:empty :after{
   content: "No questions to you, bro";
 }
-.questions > section > p:empty:after{
-  content: 'Untitled question';
-}
 
 .question {
   position: absolute;
@@ -76,8 +74,9 @@ output[ref="total"]:before { content: "/"; }
   max-width: 450px;
   margin: 2em auto;
 
-  background: grey;
   z-index: 1;
+  border-radius: 15px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
 
   text-align: center;
   line-height: 2em;
@@ -85,7 +84,15 @@ output[ref="total"]:before { content: "/"; }
   padding: 1.5em;
 }
 
-.questions section.current {
+.question p {
+  min-height: 8em;
+}
+
+.question p:empty:after{
+  content: 'Untitled question';
+}
+
+.current {
   position: relative;
   display: block;
 
@@ -93,34 +100,4 @@ output[ref="total"]:before { content: "/"; }
   top: 0;
   background: white;
   z-index: 2;
-}
-
-.quiz-container {
-  margin-top: 3em;
-}
-
-.stats {
-  text-align: center;
-  font-size: 4em;
-}
-
-.answers {
-  text-align: center;
-  margin-top: 2em
-}
-
-.answers button {
-  outline: none;
-  font-size: 3em;
-  font-family: sans-serif;
-  background: #555;
-  color: white;
-  width: 30%;
-}
-
-@media screen and (max-width: 700px) {
-  .answers button {
-    width: 90%;
-    margin: 1em 0 0 0;
-  }
 }
