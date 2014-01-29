@@ -49,16 +49,20 @@ QuizPrototype.attachedCallback = function() {
 QuizPrototype._delegateEvents = function(){
   this.addEventListener('click', function(e){
     if(e.target.className == 'answer') {
-      this.answer(e.toElement.value);
+      this.answer(e.target.value);
     };
 
-    if(e.target.getAttribute('ref') == 'reset') {
-      this.reset();
-    };
+    if(e.target.hasAttribute('ref')) {
+      var ref = e.target.getAttribute('ref');
 
-    if(e.target.getAttribute('ref') == 'start') {
-      this.start();
-    };
+      if(ref == 'reset') {
+        this.reset();
+      };
+
+      if(ref == 'start') {
+        this.start();
+      };
+    }
 
     e.stopPropagation();
   });
