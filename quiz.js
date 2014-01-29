@@ -1,7 +1,11 @@
 // get "current document" (with template) via the parent
 var _doc = (document.currentScript || document._currentScript).ownerDocument;
+
+// setup templating
+// TODO: maybe extract to gbox?
 var _template = function(){ return document.importNode(_doc.querySelector('template').content, true) };
 var _questionTemplate = function(){ return document.importNode(_doc.querySelector('[ref="question"]').content, true); }
+
 var QuizPrototype = Object.create(HTMLElement.prototype);
 
 //TODO: Extract to GBox
@@ -26,9 +30,7 @@ QuizPrototype.attachedCallback = function() {
   // Extract to GBox
   this.ui = {}
 
-  this.ui.header = function(text){ return this.querySelector('header > label').textContent = text; }.bind(this);
   this.ui.questions = function(){ return this.querySelector('.questions'); }.bind(this);
-  this.ui.questions.empty = function(){ this.ui.questions.innerHTML = ''; }.bind(this);
   this.ui.currentQuestion = function(){ return this.querySelector('section.current'); }.bind(this);
 
   this.ui.total = function(text) { this.querySelector('[ref="total"]').textContent = text; }.bind(this);
@@ -62,22 +64,32 @@ QuizPrototype._delegateEvents = function(){
 };
 
 QuizPrototype.onConfigSet = function(quiz){
-  this.ui.header(quiz.title);
-  this.ui.total(quiz.questions.length);
+  this._correctAnswers = [];
+  this.setTitle(quiz.title);
 
-  this.ui.questions.empty();
-  quiz.questions.forEach(this.onQuestionAdded.bind(this));
+  this.clearQuestions();
+  quiz.questions.forEach(this.addQuestion.bind(this));
 
-  this._correctAnswers = quiz.questions.map(function(q) { return q.correctAnswer; });
   this.reset();
 };
 
-QuizPrototype.onQuestionAdded = function(question) {
+QuizPrototype.setTitle = function(title) {
+  this.querySelector('header > label').textContent = title;
+};
+
+QuizPrototype.clearQuestions = function(){
+  this.ui.questions().innerHTML = '';
+  this.ui.total(0);
+};
+
+QuizPrototype.addQuestion = function(question) {
   var template = _questionTemplate();
   template.querySelector('p').textContent = question.title;
+  this._correctAnswers.push(question.correctAnswer);
 
   //question.querySelector('label').textContent = question.title;
   this.ui.questions().appendChild(template);
+  this.ui.total(this.ui.questions().children.length);
 };
 
 QuizPrototype.start = function(){
@@ -100,6 +112,10 @@ QuizPrototype.reset = function(){
   if(current) {
     current.classList.remove('current');
   };
+};
+
+QuizPrototype.complete = function(){
+  this.classList.add('completed');
 };
 
 QuizPrototype.answer = function(value) {
@@ -129,10 +145,6 @@ QuizPrototype.answer = function(value) {
 QuizPrototype.lastAnswerIsCorrect = function(){
   var index = this._answers.length - 1;
   return this._answers[index] == this._correctAnswers[index];
-};
-
-QuizPrototype.complete = function(){
-  this.classList.add('completed');
 };
 
 var VsQuiz = document.registerElement('vs-quiz', { prototype: QuizPrototype });
