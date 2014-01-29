@@ -48,15 +48,15 @@ QuizPrototype.attachedCallback = function() {
 
 QuizPrototype._delegateEvents = function(){
   this.addEventListener('click', function(e){
-    if(e.toElement.className == 'answer') {
+    if(e.target.className == 'answer') {
       this.answer(e.toElement.value);
     };
 
-    if(e.toElement.getAttribute('ref') == 'reset') {
+    if(e.target.getAttribute('ref') == 'reset') {
       this.reset();
     };
 
-    if(e.toElement.getAttribute('ref') == 'start') {
+    if(e.target.getAttribute('ref') == 'start') {
       this.start();
     };
 
