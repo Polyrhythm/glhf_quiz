@@ -1,38 +1,32 @@
-<head>
-  <link rel="stylesheet" href="quiz.css" />
-  <script src="./underscore.js"></script>
-  <script src="/quiz.js"></script>
-</head>
+<link rel="stylesheet" href="quiz.css" />
 
-<body>
-  <template>
-    <div class="quiz-container">
+<template>
 
-      <div class="question">
-      </div>
+  <header>
+    <label></label>
+    <output ref="total"></output>
+    <output ref="answered"></output>
+    <a ref="reset" href="#reset"></a>
+  </header>
 
-      <div class="answers">
-        <button data-value="true">True</button>
-        <button data-value="false">False</button>
-      </div>
+  <button ref="start">Start quiz!</button>
 
-      <div class="stats">
-        <p class="score">
-          0<var>/</var>0
-        </p>
-      </div>
+  <section class="questions"></section>
 
-    </div>
-  </template>
-</body>
+  <section class="result">
+    <p>Thank you for completing the quiz!</p>
+    <output ref="correct"></output>
+  </section>
 
-<script>
-  // Leaking globals for now, like Quiz 
-  document.registerElement('vs-box', { prototype: Quiz });
+</template>
 
-  // Hacky way to communicate readyness
-  function registrationEvent(){
-    return new CustomEvent('gadgetRegistered', { detail: { tag: 'vs-box'}});
-  };
-  window.dispatchEvent(registrationEvent());
-</script>
+<template ref="question">
+  <section class="question">
+    <p></p>
+    <input type="button" class="answer" value="True!"/>
+    <input type="button" class="answer" value="False!"/>
+  </section>
+</template>
+
+<script src="bower_components/underscore/underscore.js"></script>
+<script src="quiz.js"></script>

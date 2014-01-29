@@ -1,3 +1,100 @@
+vs-quiz {
+  max-width: 730px;
+  margin: auto;
+  display: block;
+  font-size: 20px;
+}
+
+header {
+  display: block;
+  vertical-align: middle;
+  font-size: 2em;
+  line-height: 2em;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+button[ref="start"] {
+  display: block;
+  margin: 3em auto;
+  line-height: 2em;
+  padding: 0 2em;
+}
+
+.started [ref="start"] {
+  display: none;
+}
+
+.result {
+  display: none;
+}
+
+.completed .result {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 1.5em;
+  line-height: 1.3em;
+  margin-top: 2em;
+}
+
+header a[ref="reset"] {
+  float: right;
+}
+
+.started header a[ref="reset"] {
+  visibility: visible;
+}
+
+header a[ref="reset"]:after {
+  content: "re-take";
+  font-size: 20px;
+  margin-right: 2em;
+}
+
+header > output {
+  float: right;
+}
+
+output:empty { content: "0"; }
+output[ref="correct"] { color: green; }
+output[ref="correct"]:before { content: "Correct answers:" ;}
+output[ref="total"]:before { content: "/"; }
+
+.questions:empty :after{
+  content: "No questions to you, bro";
+}
+.questions > section > p:empty:after{
+  content: 'Untitled question';
+}
+
+.question {
+  position: absolute;
+  left: -100%;
+  top: 0;
+
+  width: 100%;
+  max-width: 450px;
+  margin: 2em auto;
+
+  background: grey;
+  z-index: 1;
+
+  text-align: center;
+  line-height: 2em;
+
+  padding: 1.5em;
+}
+
+.questions section.current {
+  position: relative;
+  display: block;
+
+  left: 0;
+  top: 0;
+  background: white;
+  z-index: 2;
+}
+
 .quiz-container {
   margin-top: 3em;
 }
@@ -26,38 +123,4 @@
     width: 90%;
     margin: 1em 0 0 0;
   }
-}
-
-.answers button:hover, .answers button:active {
-  background: #000;
-}
-
-.question, .result-container {
-  font-size: 2.5em;
-  font-family: sans-serif;
-  color: #808080;
-  line-height: 1.2em;
-  text-align: center;
-  width: 90%;
-  margin: 0 auto 1em auto;
-}
-
-.question {
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 1em;
-}
-
-@media screen and (max-width: 700px) {
-  .question {
-    border: none;
-    padding-bottom: 0;
-  }
-}
-
-.result-container {
-  font-size: 4em;
-  margin-top: 3em;
-  color: #ccc;
-  font-weight: bold;
-  width: 95%;
 }
