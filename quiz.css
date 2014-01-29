@@ -8,12 +8,16 @@ vs-quiz {
   padding: 2em 0;
 }
 
-header {
+.quiz-header {
   display: block;
   vertical-align: middle;
   font-size: 2em;
   line-height: 2em;
   background: #fff;
+}
+
+.quiz-header label:empty:after {
+  content: "Untitled quiz";
 }
 
 .start {
@@ -52,7 +56,7 @@ header {
   visibility: visible;
 }
 
-header > output {
+.quiz-header > output {
   float: right;
 }
 

@@ -11,6 +11,9 @@ var QuizPrototype = Object.create(HTMLElement.prototype);
 
 //TODO: Extract to GBox
 QuizPrototype.createdCallback = function(){
+  this._correctAnswers = [];
+  this._answers = [];
+
   // Ooops...
   //
   // Read default config from HTML upon instantiation
@@ -18,8 +21,8 @@ QuizPrototype.createdCallback = function(){
   var script = this.querySelector('script[type="props/json"]');
   if(script) {
     this._defaultConfig = JSON.parse(script.textContent);
+    this.removeChild(script);
   }
-  this.removeChild(script);
 };
 
 QuizPrototype.attachedCallback = function() {
@@ -29,7 +32,7 @@ QuizPrototype.attachedCallback = function() {
   // TODO:
   //
   // Extract to GBox
-  this.ui = {}
+  this.ui = {};
 
   this.ui.questions = function(){ return this.querySelector('.questions'); }.bind(this);
   this.ui.currentQuestion = function(){ return this.querySelector('section.current'); }.bind(this);
@@ -49,7 +52,7 @@ QuizPrototype.attachedCallback = function() {
 QuizPrototype._delegateEvents = function(){
   this.addEventListener('click', function(e){
     if(e.target.className == 'answer') {
-      this.answer(e.target.value);
+      this.answer(e.target.dataset.answer == 'true');
     };
 
     if(e.target.hasAttribute('ref')) {
@@ -69,7 +72,6 @@ QuizPrototype._delegateEvents = function(){
 };
 
 QuizPrototype.onConfigSet = function(quiz){
-  this._correctAnswers = [];
   this.setTitle(quiz.title);
 
   this.clearQuestions();
@@ -106,7 +108,6 @@ QuizPrototype.start = function(){
 
 QuizPrototype.reset = function(){
   this._answers = [];
-  this._correct = 0;
 
   this.ui.answered(0);
   this.ui.correct(0);
@@ -123,16 +124,10 @@ QuizPrototype.complete = function(){
   this.classList.add('completed');
 };
 
-QuizPrototype.answer = function(value) {
-  var answer = (value == 'True!');
-
+QuizPrototype.answer = function(answer) {
   this._answers.push(answer);
 
-  if(this.lastAnswerIsCorrect()) {
-    this._correct++;
-    this.ui.correct(this._correct);
-  };
-
+  this.ui.correct(this.correctAnswerCount());
   this.ui.answered(this._answers.length);
 
   var current = this.ui.currentQuestion()
@@ -147,9 +142,14 @@ QuizPrototype.answer = function(value) {
   }
 };
 
-QuizPrototype.lastAnswerIsCorrect = function(){
-  var index = this._answers.length - 1;
-  return this._answers[index] == this._correctAnswers[index];
+QuizPrototype.correctAnswerCount = function(){
+  var correctAnswers = this._correctAnswers;
+  var cnt = 0;
+
+  this._answers.forEach(function(answer, i) {
+    if(correctAnswers[i] == answer) { cnt++; }
+  });
+  return cnt;
 };
 
-var VsQuiz = document.registerElement('vs-quiz', { prototype: QuizPrototype });
+var VsQuiz = document.registerElement('vs-quiz', { prototype: QuizPrototype, extends: 'div' });
